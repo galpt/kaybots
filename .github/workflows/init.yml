@@ -35,7 +35,8 @@ jobs:
       - name: Install Deps
         run: |
             sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 nodejs npm \
-            && sudo npm install --g gulp-cli http-server
+            && sudo npm install --global gulp-cli \
+            && sudo npm install --global http-server
 
       - name: Setup
         run: |

@@ -12,11 +12,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+        run: npm ci
 
       - name: Optimize Network Settings
         run: |
@@ -34,7 +40,7 @@ jobs:
 
       - name: Install Deps
         run: |
-            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 nodejs npm \
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 \
             && sudo npm install --global gulp-cli \
             && sudo npm install --global http-server
 

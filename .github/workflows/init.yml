@@ -69,6 +69,7 @@ jobs:
             sudo npm install http-server
             sudo gulp clean build-bundle
             sudo pwd
+            ls
             cd ./dist
             sudo http-server -p80
 

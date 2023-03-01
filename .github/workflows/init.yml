@@ -62,16 +62,9 @@ jobs:
         continue-on-error: true
         timeout-minutes: 310
         run: |
-            sudo git clone https://github.com/mayswind/AriaNg.git
-            cd AriaNg
-            sudo npm install -g gulp-cli
-            sudo npm install -g http-server
-            sudo npm install
-            sudo gulp clean build-bundle
-            sudo pwd
-            ls
-            cd ./dist
-            sudo http-server -p80
+            sudo git clone https://github.com/ziahamza/webui-aria2.git
+            cd webui-aria2
+            sudo node node-server.js
 
       - name: Frontend (cleanup)
         run: |

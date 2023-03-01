@@ -39,9 +39,7 @@ jobs:
 
       - name: Install Deps
         run: |
-            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 \
-            && sudo npm install --global gulp-cli \
-            && sudo npm install --global http-server
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2
 
       - name: Setup
         run: |
@@ -67,6 +65,8 @@ jobs:
             sudo git clone https://github.com/mayswind/AriaNg.git
             cd AriaNg
             sudo npm install
+            sudo npm install gulp-cli
+            sudo npm install http-server
             sudo gulp clean build-bundle
 
       - name: Backend

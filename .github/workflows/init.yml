@@ -1,0 +1,85 @@
+name: Init
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+       os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
+      - name: Optimize Network Settings
+        run: |
+            sudo sysctl -w net.core.default_qdisc=fq \
+            && sudo sysctl -w net.ipv4.tcp_congestion_control=bbr \
+            && sudo sysctl -w net.ipv4.tcp_window_scaling=1 \
+            && sudo sysctl -w net.ipv4.tcp_reordering=15 \
+            && sudo sysctl -w net.ipv4.tcp_fastopen=3 \
+            && sudo sysctl -w net.ipv4.ip_forward=1 \
+            && sudo sysctl -w net.core.rmem_max=67108864 \
+            && sudo sysctl -w net.core.wmem_max=67108864 \
+            && sudo sysctl -w net.core.netdev_max_backlog=2000 \
+            && sudo sysctl -p \
+            && sudo ethtool -K eth0 tx off rx off
+
+      - name: Install Deps
+        run: |
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 nodejs npm \
+            && sudo npm install --g gulp-cli http-server
+
+      - name: Setup
+        run: |
+            sudo pwd
+            sudo wget https://0ms.run/cf.zip
+            sudo unzip ./cf.zip
+            sudo dpkg -i ./cf/cf.deb
+            sudo mkdir /root/.cloudflared/
+            sudo chmod -R 777 /root/.cloudflared/
+            sudo cp ./cf/c73d4d94-ac84-4c94-96a2-baf3aa40e25e.json /root/.cloudflared/
+            sudo cp ./cf/cert.pem /root/.cloudflared/
+            sudo cp ./cf/config.yml /root/.cloudflared/
+            sudo rm -rf /etc/cloudflared/config.yml
+            sudo aria2c --enable-rpc --rpc-listen-port=6800 &
+
+      - name: Frontend (init)
+        run: |
+            sudo cloudflared tunnel cleanup c73d4d94-ac84-4c94-96a2-baf3aa40e25e
+            sudo cloudflared service install
+            sudo service cloudflared start
+            sudo cloudflared tunnel route dns lab test.0ms.run &
+            sudo cloudflared tunnel run c73d4d94-ac84-4c94-96a2-baf3aa40e25e &
+            sudo git clone https://github.com/mayswind/AriaNg.git
+            cd AriaNg
+            sudo npm install
+            sudo gulp clean build-bundle
+
+      - name: Backend
+        continue-on-error: true
+        timeout-minutes: 310
+        run: |
+            cd dist
+            sudo http-server -p80
+
+      - name: Frontend (cleanup)
+        run: |
+            sudo service cloudflared stop
+            sudo cloudflared tunnel cleanup c73d4d94-ac84-4c94-96a2-baf3aa40e25e
+            sudo cloudflared service uninstall
+
+      - name: Always Check
+        if: always()
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACTIONS_PAT }}
+          event-type: restart
+          client-payload: '{"runid": "${{ github.run_id }}"}'

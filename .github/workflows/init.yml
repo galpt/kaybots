@@ -65,8 +65,8 @@ jobs:
             sudo git clone https://github.com/mayswind/AriaNg.git
             cd AriaNg
             sudo npm install
-            sudo npm install gulp-cli
-            sudo npm install http-server
+            sudo npm install -g gulp-cli
+            sudo npm install -g http-server
             sudo gulp clean build-bundle
             sudo pwd
             ls

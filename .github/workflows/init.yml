@@ -18,11 +18,6 @@ jobs:
         with:
           swap-size-gb: 10
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       - name: Optimize Network Settings
         run: |
             sudo sysctl -w net.core.default_qdisc=fq \
@@ -39,7 +34,7 @@ jobs:
 
       - name: Install Deps
         run: |
-            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential aria2 nodejs npm
 
       - name: Setup
         run: |
@@ -73,6 +68,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 310
         run: |
+            sudo pwd
             cd dist
             sudo http-server -p80
 

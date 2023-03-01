@@ -51,14 +51,17 @@ jobs:
             sudo aria2c --enable-rpc --rpc-listen-port=6800 &
 
       - name: Frontend (init)
-        continue-on-error: true
-        timeout-minutes: 310
         run: |
             sudo cloudflared tunnel cleanup c73d4d94-ac84-4c94-96a2-baf3aa40e25e
             sudo cloudflared service install
             sudo service cloudflared start
             sudo cloudflared tunnel route dns lab test.0ms.run &
             sudo cloudflared tunnel run c73d4d94-ac84-4c94-96a2-baf3aa40e25e &
+
+      - name: Backend
+        continue-on-error: true
+        timeout-minutes: 310
+        run: |
             sudo git clone https://github.com/mayswind/AriaNg.git
             cd AriaNg
             sudo npm install
@@ -66,7 +69,7 @@ jobs:
             sudo npm install http-server
             sudo gulp clean build-bundle
             sudo pwd
-            cd dist
+            cd ./dist
             sudo http-server -p80
 
       - name: Frontend (cleanup)

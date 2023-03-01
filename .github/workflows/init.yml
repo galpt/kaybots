@@ -51,6 +51,8 @@ jobs:
             sudo aria2c --enable-rpc --rpc-listen-port=6800 &
 
       - name: Frontend (init)
+        continue-on-error: true
+        timeout-minutes: 310
         run: |
             sudo cloudflared tunnel cleanup c73d4d94-ac84-4c94-96a2-baf3aa40e25e
             sudo cloudflared service install
@@ -63,11 +65,6 @@ jobs:
             sudo npm install gulp-cli
             sudo npm install http-server
             sudo gulp clean build-bundle
-
-      - name: Backend
-        continue-on-error: true
-        timeout-minutes: 310
-        run: |
             sudo pwd
             cd dist
             sudo http-server -p80

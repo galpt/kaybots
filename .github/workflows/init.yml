@@ -44,7 +44,7 @@ jobs:
             cd discord-bot
             sudo touch .env
             sudo chmod -R 777 ./.env
-            sudo echo "${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
+            sudo echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
             sudo npm i
             sudo node index.js &
             cd ..
@@ -52,9 +52,9 @@ jobs:
             cd AiChanBot
             sudo touch .env
             sudo chmod -R 777 ./.env
-            sudo echo "${{ secrets.DISCORD_TOKEN_AICHAN }}" >> .env
-            sudo echo "${{ secrets.OPENAI_ORG }}" >> .env
-            sudo echo "${{ secrets.OPENAI_KEY }}" >> .env
+            sudo echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_AICHAN }}" >> .env
+            sudo echo "OPENAI_ORG=${{ secrets.OPENAI_ORG }}" >> .env
+            sudo echo "OPENAI_KEY=${{ secrets.OPENAI_KEY }}" >> .env
             sudo -H -u searxng -i
             sudo git clone "https://github.com/searxng/searxng" \
             && "/usr/local/searxng/searxng-src"

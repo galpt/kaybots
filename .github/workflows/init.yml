@@ -41,14 +41,14 @@ jobs:
         run: |
             sudo pwd
             sudo git clone https://github.com/TannerGabriel/discord-bot
-            sudo cd discord-bot
+            cd discord-bot
             sudo touch .env
             sudo echo "${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
             sudo npm i
             sudo node index.js &
-            sudo cd ..
+            cd ..
             sudo git clone https://github.com/nawka12/AiChanBot
-            sudo cd AiChanBot
+            cd AiChanBot
             sudo touch .env
             sudo echo "${{ secrets.DISCORD_TOKEN_AICHAN }}" >> .env
             sudo echo "${{ secrets.OPENAI_ORG }}" >> .env
@@ -65,7 +65,7 @@ jobs:
             sudo pip install -U setuptools
             sudo pip install -U wheel
             sudo pip install -U pyyaml
-            sudo cd "/usr/local/searxng/searxng-src"
+            cd "/usr/local/searxng/searxng-src"
             sudo pip install -e .
             sudo rm -rf /etc/searxng/settings.yml
             sudo cp ./settings.yml /etc/searxng/

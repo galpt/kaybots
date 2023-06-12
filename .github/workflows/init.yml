@@ -34,10 +34,9 @@ jobs:
 
       - name: Install Deps and Initialization
         run: |
-            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential nodejs npm ffmpeg python3-dev python3-babel python3-venv uwsgi uwsgi-plugin-python3 libxslt-dev zlib1g-dev libffi-dev libssl-dev
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential nodejs npm ffmpeg
             sudo git clone https://github.com/TannerGabriel/discord-bot
             sudo git clone https://github.com/nawka12/AiChanBot
-            sudo git clone https://github.com/searxng/searxng.git searxng
             sudo touch .env
             sudo chmod -R 777 ./.env
             sudo echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
@@ -56,12 +55,6 @@ jobs:
             sudo npm i
             sudo node index.js &
 
-      - name: Setup SearXNG
-        working-directory: ./searxng
-        run: |
-            sudo pwd
-            sudo -H ./utils/searxng.sh install all
-
       - name: Setup AiChan
         working-directory: ./AiChanBot
         continue-on-error: true
@@ -69,8 +62,6 @@ jobs:
         run: |
             sudo pwd
             sudo npm i
-            sudo rm -rf /etc/searxng/settings.yml
-            sudo cp ./settings.yml /etc/searxng/
             sudo node index.js
 
       - name: Always Check

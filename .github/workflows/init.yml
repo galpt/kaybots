@@ -43,6 +43,7 @@ jobs:
             sudo git clone https://github.com/TannerGabriel/discord-bot
             cd discord-bot
             sudo touch .env
+            sudo chmod -R 777 ./.env
             sudo echo "${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
             sudo npm i
             sudo node index.js &
@@ -50,6 +51,7 @@ jobs:
             sudo git clone https://github.com/nawka12/AiChanBot
             cd AiChanBot
             sudo touch .env
+            sudo chmod -R 777 ./.env
             sudo echo "${{ secrets.DISCORD_TOKEN_AICHAN }}" >> .env
             sudo echo "${{ secrets.OPENAI_ORG }}" >> .env
             sudo echo "${{ secrets.OPENAI_KEY }}" >> .env

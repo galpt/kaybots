@@ -30,31 +30,38 @@ jobs:
             && sudo sysctl -w net.core.wmem_max=67108864 \
             && sudo sysctl -w net.core.netdev_max_backlog=2000 \
             && sudo sysctl -p
+            
 
-      - name: Install Deps
+      - name: Install Deps and Initialization
         run: |
             sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev build-essential nodejs npm ffmpeg python3-dev python3-babel python3-venv uwsgi uwsgi-plugin-python3 libxslt-dev zlib1g-dev libffi-dev libssl-dev
-
-      - name: Setup Moonaroh AiChan
-        continue-on-error: true
-        timeout-minutes: 310
-        run: |
-            sudo pwd
             sudo git clone https://github.com/TannerGabriel/discord-bot
-            cd discord-bot
+            sudo git clone https://github.com/nawka12/AiChanBot
             sudo touch .env
             sudo chmod -R 777 ./.env
             sudo echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_MOONAROH }}" >> .env
-            sudo npm i
-            sudo node index.js &
-            cd ..
-            sudo git clone https://github.com/nawka12/AiChanBot
-            cd AiChanBot
+            sudo mv ./.env ./discord-bot
             sudo touch .env
             sudo chmod -R 777 ./.env
             sudo echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_AICHAN }}" >> .env
             sudo echo "OPENAI_ORG=${{ secrets.OPENAI_ORG }}" >> .env
             sudo echo "OPENAI_KEY=${{ secrets.OPENAI_KEY }}" >> .env
+            sudo mv ./.env ./AiChanBot
+
+      - name: Setup Moonaroh
+        working-directory: ./discord-bot
+        run: |
+            sudo pwd
+            sudo npm i
+            sudo node index.js &
+
+      - name: Setup AiChan
+        working-directory: ./AiChanBot
+        continue-on-error: true
+        timeout-minutes: 310
+        run: |
+            sudo pwd
+            sudo npm i
             sudo -H -u searxng -i
             sudo git clone "https://github.com/searxng/searxng" \
             && "/usr/local/searxng/searxng-src"

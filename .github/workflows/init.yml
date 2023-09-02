@@ -65,7 +65,6 @@ jobs:
       - name: Setup AiChan
         working-directory: ./kaybots/AiChanBot
         continue-on-error: true
-        timeout-minutes: 310
         run: |
             sudo pwd
             sudo npm i

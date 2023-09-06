@@ -5,7 +5,10 @@ on: push
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+       os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +27,7 @@ jobs:
 
       - name: Install Deps and Initialization
         run: |
-            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev ffmpeg
+            sudo apt-get update && sudo apt-get -y install git curl wget unzip libcurl4-openssl-dev nodejs ffmpeg
             sudo mkdir ./kaybots
             sudo mkdir ./galbots
             sudo git clone https://github.com/TannerGabriel/discord-bot
@@ -65,6 +68,7 @@ jobs:
       - name: Setup AiChan
         working-directory: ./kaybots/AiChanBot
         continue-on-error: true
+        timeout-minutes: 310
         run: |
             sudo pwd
             sudo npm i
